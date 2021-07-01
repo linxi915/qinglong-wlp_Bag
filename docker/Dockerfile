@@ -30,6 +30,9 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     && touch ~/.bashrc \
     && mkdir /run/nginx \
     && git clone -b ${QL_BRANCH} ${QL_URL} ${QL_DIR} \
+    && git config --global user.email "qinglong@@users.noreply.github.com" \
+    && git config --global user.name "qinglong" \
+    && git config --global pull.rebase true \
     && cd ${QL_DIR} \
     && cp -f .env.example .env \
     && chmod 777 ${QL_DIR}/shell/*.sh \
@@ -37,6 +40,10 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     && npm install -g pm2 \
     && npm install -g pnpm \
     && rm -rf /root/.npm \
+    && pnpm install \
+    && pnpm build \
+    && pnpm build-back \
+    && rm -rf node_modules \
     && pnpm install --prod \
     && rm -rf /root/.pnpm-store
 ENTRYPOINT ["./docker/docker-entrypoint.sh"]
