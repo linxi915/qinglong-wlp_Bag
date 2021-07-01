@@ -7,6 +7,8 @@ link_shell
 echo -e "======================1. 检测配置文件========================\n"
 fix_config
 cp -fv $dir_root/docker/front.conf /etc/nginx/conf.d/front.conf
+cp -f $dir_sample/package.json $dir_scripts/package.json
+npm_install_2 $dir_scripts
 pm2 l >/dev/null 2>&1
 echo
 
