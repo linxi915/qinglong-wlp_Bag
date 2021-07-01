@@ -1,8 +1,6 @@
 name: Publish Docker Image
 on:
-  workflow_run:
-    workflows: ["build static"]
-    types: [completed]
+  workflow_dispatch:
 
 jobs:
   build:
