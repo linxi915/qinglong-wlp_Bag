@@ -1,7 +1,7 @@
 FROM node:lts-alpine
 LABEL maintainer="whyour"
 ARG QL_URL=https://github.com/whyour/qinglong.git
-ARG QL_BRANCH=master
+ARG QL_BRANCH=v2.2.0
 ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
     LANG=zh_CN.UTF-8 \
     SHELL=/bin/bash \
@@ -29,21 +29,20 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     && echo "Asia/Shanghai" > /etc/timezone \
     && touch ~/.bashrc \
     && mkdir /run/nginx \
+    && git clone -b ${QL_BRANCH} https://github.com/whyour/qinglong-static.git /static \
     && git clone -b ${QL_BRANCH} ${QL_URL} ${QL_DIR} \
     && git config --global user.email "qinglong@@users.noreply.github.com" \
     && git config --global user.name "qinglong" \
     && git config --global pull.rebase true \
     && cd ${QL_DIR} \
+    && cp -rf /static/* ./ \
+    && rm -rf /static \
     && cp -f .env.example .env \
     && chmod 777 ${QL_DIR}/shell/*.sh \
     && chmod 777 ${QL_DIR}/docker/*.sh \
     && npm install -g pm2 \
     && npm install -g pnpm \
     && rm -rf /root/.npm \
-    && pnpm install \
-    && pnpm build \
-    && pnpm build-back \
-    && rm -rf node_modules \
     && pnpm install --prod \
     && rm -rf /root/.pnpm-store
 ENTRYPOINT ["./docker/docker-entrypoint.sh"]
